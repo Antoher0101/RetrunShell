@@ -29,6 +29,7 @@
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
     <ClCompile Include="src\mx\View.cpp" />
+    <ClCompile Include="src\WindowGL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ViewCam.h" />
@@ -41,6 +42,7 @@
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\VertexBuffer.h" />
     <ClInclude Include="src\mx\View.h" />
+    <ClInclude Include="src\WindowGL.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\glsl\test.frag" />

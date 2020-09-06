@@ -2,6 +2,9 @@
 #include <vector>
 #include "GL/glew.h"
 #include "glm/glm.hpp"
+
+#include <iostream>
+
 class VertexBuffer
 {
 	GLuint Vao_;

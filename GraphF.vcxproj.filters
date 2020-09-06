@@ -55,6 +55,9 @@
     <ClCompile Include="src\ViewCam.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="src\WindowGL.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ObjectReader.h">
@@ -87,6 +90,7 @@
     <ClInclude Include="src\ViewCam.h">
       <Filter>Заголовки</Filter>
     </ClInclude>
+    <ClInclude Include="src\WindowGL.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\glsl\test.frag">

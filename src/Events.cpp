@@ -1,92 +1,67 @@
 #include "Events.h"
 
-Events::Events(sf::RenderWindow* win)
+Events::Events(WindowGL* win)
 {
-	screenW = static_cast<float>(win->getSize().x);
-	screenH = static_cast<float>(win->getSize().y);
 	window = win;
-}
-
-glm::vec2 Events::getRelativeMousePos()
-{
-	return { window->getPosition().x + screenW/2, window->getPosition().y + screenH/2 };
+	glfw_window = win->getWindow();
 }
 
 void Events::update(VertexBuffer* vao, Shader* shader)
 {
-	float etime = clock.getElapsedTime().asSeconds();
+	// OpenGL error handle
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+		std::cout << "OpenGL Error: " << error << std::endl;
 	
-	clock.restart();
-	time += etime;
-	cam.setElapsedTime(etime*100);
-	cam.setMousePos({ (float)sf::Mouse::getPosition().x, (float)sf::Mouse::getPosition().y });
+	// Get screen size
+	glfwGetWindowSize(glfw_window, &screenW, &screenH);
 	
-	while (window->pollEvent(event))
-	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) { window->close(); }
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { cam.movementCam(MOVE_FORWARD); }
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { cam.movementCam(MOVE_BACK); }
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { cam.movementCam(MOVE_LEFT); }
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { cam.movementCam(MOVE_RIGHT); }
-		// Event handler
-		switch (event.type) 
-		{
-		case sf::Event::Resized:
-		{
-			screenW = (float)window->getSize().x;
-			screenH = (float)window->getSize().y;
-			window->setActive(true);
-			glViewport(0, 0, event.size.width, event.size.height);
-			window->setActive(false);
-			break;
-		}
-		case sf::Event::Closed: window->close(); break;
-		case sf::Event::KeyPressed: {
-			
-			break;
-		}
-		case sf::Event::MouseWheelScrolled:
-		{
-			if (event.mouseWheelScroll.delta < 0);
-			if (event.mouseWheelScroll.delta > 0);
-			break;
-		}
-		case sf::Event::MouseButtonPressed: {
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-				window->setMouseCursorVisible(false);
-				draggingL = true;
-				cam.setMouseLastPos({ (float)sf::Mouse::getPosition().x, (float)sf::Mouse::getPosition().y });
-			}
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Middle)) {
-				window->setMouseCursorVisible(false);
-				draggingM = true;
-				cam.setMouseLastPos({ (float)sf::Mouse::getPosition().x, (float)sf::Mouse::getPosition().y });
-			}
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-			{
-				window->setMouseCursorVisible(false);
-				draggingR = true;
-				cam.setMouseLastPos({ (float)sf::Mouse::getPosition().x, (float)sf::Mouse::getPosition().y });
-			}
-			break;
-		}
-		case sf::Event::MouseButtonReleased: {
-			if (event.mouseButton.button == sf::Mouse::Left) { window->setMouseCursorVisible(true); draggingL = false; }
-			if (event.mouseButton.button == sf::Mouse::Middle) { window->setMouseCursorVisible(true); draggingM = false; }
-			if (event.mouseButton.button == sf::Mouse::Right) { window->setMouseCursorVisible(true); draggingR = false; }
-			break;
-		}
-		default: break;
-		}
-	}
+	glfwSwapInterval(0);
+	
+	GLfloat clock = glfwGetTime();
+	deltaTime = clock - lastFrame;
+	lastFrame = clock;
+
+	// Start events handle 
+	glfwPollEvents();
+
+	glfwSwapBuffers(glfw_window);
+
+	// Clear OpenGL buffers
 	glClearColor(1.f, 1.f, 1.f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	window->clear();
 	
+	cam.setElapsedTime(deltaTime*100);
+	cam.setFirstMousePos(window->getMousePosition());
+
+	glViewport(0, 0, screenW, screenH);
+	
+	if (window->isKeyPressed(GLFW_KEY_ESCAPE)) { glfwSetWindowShouldClose(window->getWindow(), true); }
+	if (window->isKeyPressed(GLFW_KEY_W)) { cam.movementCam(MOVE_FORWARD); }
+	if (window->isKeyPressed(GLFW_KEY_S)) { cam.movementCam(MOVE_BACK); }
+	if (window->isKeyPressed(GLFW_KEY_A)) { cam.movementCam(MOVE_LEFT); }
+	if (window->isKeyPressed(GLFW_KEY_D)) { cam.movementCam(MOVE_RIGHT); }
+
+	if (window->isWheelScrolled(M_WHEEL_UP)) std::cout << "Up!\n";
+	if (window->isWheelScrolled(M_WHEEL_DOWN)) std::cout << "Down\n";
+
+	// TODO: try to set mouse in center of screen to fix bug
+	if(window->isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+		glfwSetInputMode(glfw_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		draggingL = true;
+		if (!wasReleased) cam.setMouseLastPos(window->getMousePosition());
+	} else {
+		glfwSetInputMode(glfw_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		draggingL = false;
+		wasReleased = true;
+	}
+
+	 // std::cout << "" << std::endl;
 	
 	mx::Model model;
 	model.mTranslate({ 0.f,0.f,-2.f });
 	model.mRotate(15.f, { 1.f, 1.f, 0.f });
-	model.mRotate(90.f*time, {0.f, 1.f, 0.f});
+	model.mRotate(90.f* clock, {0.f, 1.f, 0.f});
 	model.mScale({0.045f,0.045f,0.045f});
 	
 	mx::View view;
@@ -100,12 +75,11 @@ void Events::update(VertexBuffer* vao, Shader* shader)
 	shader->setUniform("View", view.getMatrix());
 	shader->setUniform("Projection", projection.getMatrix());
 	shader->setUniform("iResolution", screenW,screenH );
-	shader->setUniform("iTime", time);
+	shader->setUniform("iTime", clock);
 	
 	vao->drawObj();
 	
 	if (draggingL || draggingM || draggingR) {
 		cam.calculateCam();
 	}
-	window->display();
 }

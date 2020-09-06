@@ -2,7 +2,7 @@
 
 ViewCam::ViewCam()
 {
-	mlastPos = { 640.f,360.f };
+	mlastPos = { 640.f,480.f };
 	mPos = { 0.f,0.f };
 	front = { 0.f,0.f,0.f };
 	euler_ = { 0.f,-90.f,0.f };
@@ -11,7 +11,7 @@ ViewCam::ViewCam()
 	cameraFront = { 0.0f, 0.0f, -1.0f };
 }
 
-void ViewCam::setMousePos(glm::vec2 mPos)
+void ViewCam::setFirstMousePos(glm::vec2 mPos)
 {
 	this->mPos = mPos;
 }

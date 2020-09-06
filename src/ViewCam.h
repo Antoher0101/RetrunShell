@@ -39,7 +39,7 @@ class ViewCam
 	
 public:
 	ViewCam();
-	void setMousePos(glm::vec2 mPos);
+	void setFirstMousePos(glm::vec2 mPos);
 	void setMouseLastPos(glm::vec2 mPos);
 	void calculateCam();
 	void setsensitivity(float sens);
