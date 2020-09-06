@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Заголовки">
+      <UniqueIdentifier>{24e100af-a744-4ccb-9cde-de022113467a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GLSL">
+      <UniqueIdentifier>{95758d49-2c0e-43bf-bc75-ddf281523744}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовки\MATRIX">
+      <UniqueIdentifier>{e4864e99-371b-4911-bc0a-3300770bd768}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\MATRIX">
+      <UniqueIdentifier>{6ca34c85-b579-4888-a3ff-bdee130231d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\openGL">
+      <UniqueIdentifier>{8facc2f9-93c9-40f8-8a83-dbf1ec8ace2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовки\openGL">
+      <UniqueIdentifier>{42e6b1c5-1597-4226-a248-4af4cde89158}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Events.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ObjectReader.cpp">
+      <Filter>Исходные файлы\openGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader.cpp">
+      <Filter>Исходные файлы\openGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexBuffer.cpp">
+      <Filter>Исходные файлы\openGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mx\Matrix.cpp">
+      <Filter>Исходные файлы\MATRIX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mx\Model.cpp">
+      <Filter>Исходные файлы\MATRIX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mx\View.cpp">
+      <Filter>Исходные файлы\MATRIX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mx\Projection.cpp">
+      <Filter>Исходные файлы\MATRIX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ViewCam.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ObjectReader.h">
+      <Filter>Заголовки\openGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events.h">
+      <Filter>Заголовки</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shader.h">
+      <Filter>Заголовки\openGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VertexBuffer.h">
+      <Filter>Заголовки\openGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mx\Matrix.h">
+      <Filter>Заголовки\MATRIX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mx\Model.h">
+      <Filter>Заголовки\MATRIX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mx\View.h">
+      <Filter>Заголовки\MATRIX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mx\Projection.h">
+      <Filter>Заголовки\MATRIX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mx\mx.h">
+      <Filter>Заголовки\MATRIX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ViewCam.h">
+      <Filter>Заголовки</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resource\glsl\test.frag">
+      <Filter>GLSL</Filter>
+    </None>
+    <None Include="resource\glsl\test.vert">
+      <Filter>GLSL</Filter>
+    </None>
+  </ItemGroup>
+</Project>
