@@ -58,6 +58,12 @@
     <ClCompile Include="src\WindowGL.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mesh.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ModelReader.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ObjectReader.h">
@@ -91,6 +97,8 @@
       <Filter>Заголовки</Filter>
     </ClInclude>
     <ClInclude Include="src\WindowGL.h" />
+    <ClInclude Include="src\ModelReader.h" />
+    <ClInclude Include="src\Mesh.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\glsl\test.frag">
@@ -99,5 +107,7 @@
     <None Include="resource\glsl\test.vert">
       <Filter>GLSL</Filter>
     </None>
+    <None Include="resource\glsl\skybox.vert" />
+    <None Include="resource\glsl\skybox.frag" />
   </ItemGroup>
 </Project>

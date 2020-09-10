@@ -32,7 +32,6 @@ void Shader::link()
 {
 	glAttachShader(program_, vertexShader);
 	glAttachShader(program_, fragmentShader);
-
 	glLinkProgram(program_);
 }
 
@@ -59,6 +58,15 @@ void Shader::setUniform(const std::string& name, glm::mat4 value)
 {
 	glUniformMatrix4fv(getLocation(name), 1,GL_FALSE, glm::value_ptr(value));
 }
+void Shader::setUniform(const std::string& name, glm::vec3 value)
+{
+	glUniform3fv(getLocation(name),1,glm::value_ptr(value));
+}
+void Shader::setUniform(const std::string& name, glm::vec4 value)
+{
+	glUniform4fv(getLocation(name), 1, glm::value_ptr(value));
+}
+
 GLint Shader::getLocation(const std::string& name)
 {
 	return glGetUniformLocation(program_, name.c_str());
@@ -74,6 +82,7 @@ Shader::Shader(const std::string& name)
 
 Shader::~Shader()
 {
+	glDetachShader(program_, vertexShader);
 	glDetachShader(program_, fragmentShader);
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);

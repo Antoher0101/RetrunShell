@@ -54,8 +54,9 @@ ObjectReader::ObjectReader(const std::string& objName)
 				{
 					sscanf_s(str.c_str(), "%*s %u %u %u", &iv_, &iv1_, &iv2_);
 				}
-					
-					VertIndices.emplace_back(iv_ - 1); VertIndices.emplace_back(iv1_ - 1); VertIndices.emplace_back(iv2_ - 1); // recheck this "-1" solution later
+					VertIndices.emplace_back(iv_ - 1);
+					VertIndices.emplace_back(iv1_ - 1);
+					VertIndices.emplace_back(iv2_ - 1);
 				}
 					// Read and write the name of object from file
 				else if (!strncmp(strType.c_str(), "o", 1)) {
@@ -64,6 +65,9 @@ ObjectReader::ObjectReader(const std::string& objName)
 					// Read and write the comment from file 
 				else if (!strncmp(strType.c_str(),"#",1)) {
 					this->objectInfo += str + "\n";
+				}
+				else if (!strncmp(strType.c_str(), "s", 1)) {
+					continue;
 				}
 				//std::cout << str << std::endl;
 				

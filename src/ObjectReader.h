@@ -25,6 +25,7 @@ class ObjectReader
 	unsigned iv1_ = 0;
 	unsigned iv2_ = 0;
 public:
+	
 	std::vector<glm::vec3> getVertexData();
 	std::vector<glm::vec3> getVTextureData();
 	std::vector<glm::vec3> getVNormalData();

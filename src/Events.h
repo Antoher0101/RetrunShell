@@ -21,16 +21,18 @@ class Events
 	GLfloat deltaTime = 0.0f;
 	GLfloat lastFrame = 0.0f;
 
+	float x = 1.f;
+	
 	// Variables for handling mouse button events
 	bool draggingL = false;
 	bool draggingM = false;
-	bool draggingR = false;
+	bool draggingR = true;
 
 	bool wasReleased = true;
 public:
 	Events(WindowGL* win);
 	Events(Events&) = delete;
-	void update(VertexBuffer* vao = nullptr, Shader* shader = nullptr);
+	void update(std::vector<VertexBuffer*> vao = { nullptr }, std::vector<Shader*> shader = { nullptr });
 };
 
 #endif
