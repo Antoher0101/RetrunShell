@@ -42,7 +42,10 @@ WindowGL::WindowGL(const char* title, int width, int height)
 	for (int i = 0; i < MAX_BUTTONS; i++)
 		m_MouseButtons[i] = false;
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_MULTISAMPLE);
 }
 WindowGL::~WindowGL()
 {
@@ -61,7 +64,11 @@ bool WindowGL::init()
 		std::cerr << e.what() << std::endl;
 		return false;
 	}
-
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 	m_Window = glfwCreateWindow(m_Width, m_Height, m_Title, NULL, NULL);		// Returns a pointer
 
 	if (!m_Window)
@@ -92,7 +99,7 @@ bool WindowGL::init()
 		throw;
 	}
 
-	std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
+	//std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
 
 	return true;
 }

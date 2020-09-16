@@ -1,9 +1,9 @@
 #include "ViewCam.h"
 
+#include <iostream>
+
 ViewCam::ViewCam()
 {
-	mlastPos = { 640.f,480.f };
-	mPos = { 0.f,0.f };
 	front = { 0.f,0.f,0.f };
 	euler_ = { 0.f,-90.f,0.f };
 
@@ -27,10 +27,16 @@ void ViewCam::calculateCam()
 	offset = { mPos.x - mlastPos.x,mlastPos.y - mPos.y };
 	euler_.pitch += offset.y * sensitivity;
 	euler_.yaw += offset.x * sensitivity;
+	if (euler_.pitch >= 89.99f) euler_.pitch = 89.99f;
+	if (euler_.pitch <= -89.99f) euler_.pitch = -89.99f;
 	front.x = cos(glm::radians(euler_.yaw)) * cos(glm::radians(euler_.pitch));
 	front.y = sin(glm::radians(euler_.pitch));
 	front.z = sin(glm::radians(euler_.yaw)) * cos(glm::radians(euler_.pitch));
 	cameraFront = glm::normalize(front);
+}
+
+void ViewCam::resetMouseDelta()
+{
 	mlastPos = mPos;
 }
 
@@ -42,9 +48,9 @@ void ViewCam::setsensitivity(float sens)
 void ViewCam::movementCam(CamDirection dir)
 {
 	if (dir == MOVE_FORWARD)
-		cameraPos += motionSpeed * cameraFront* time;
+		cameraPos += motionSpeed * cameraFront * time;
 	if (dir == MOVE_BACK)
-		cameraPos -= motionSpeed * cameraFront* time;
+		cameraPos -= motionSpeed * cameraFront * time;
 	if (dir == MOVE_LEFT)
 		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * motionSpeed*time;
 	if (dir == MOVE_RIGHT)

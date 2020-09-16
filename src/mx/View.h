@@ -18,8 +18,6 @@ namespace mx
 		void mTranslate(glm::vec3 cords) override;
 		void mScale(glm::vec3 cords) override;
 		void mRotate(float angle, glm::vec3 cords) override;
-
-		
 	};
 	
 }

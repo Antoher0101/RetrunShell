@@ -6,21 +6,26 @@
 
 #include "WindowGL.h"
 
-#include "ObjectReader.h"
 #include "ModelReader.h"
 #include "Mesh.h"
+
+#include "Text.h"
 
 const int WIDTH = 1280;
 const int HEIGHT = 720;
 
-// TODO: move load texture function to ModelReader as static func
 // TODO: https://habr.com/ru/post/347354/
+// TODO: UniformBuffer (View, Projection)
+// TODO: Display text and current speed
+// TODO: Move key handle to WindowGL
 
 int main(int argc, char* argv[])
-{
-	
+{	
 	WindowGL window("GLFW", WIDTH, HEIGHT);
 
+
+	
+	
 	ModelReader skycube("cube.obj");
 	VertexBuffer skyboxBuf;
 
@@ -44,7 +49,7 @@ int main(int argc, char* argv[])
 	vao.addVertexBuffer(model.getMeshes()[0].getVertexNormals());
 	vao.addVertexBuffer(model.getMeshes()[0].getTexCoords());
 	vao.addIndices(model.getMeshes()[0].getIndeces());
-	vao.addTextureBuffer("tex.jpg");
+	vao.addTextureBuffer("tex2.jpg");
 	
 	Shader trueno("test");
 	trueno.bindAttrib(0, "pos");
@@ -53,7 +58,9 @@ int main(int argc, char* argv[])
 	trueno.link();
 	
 	Events events(&window);
-	while (!window.closed()) { events.update({ &vao, &skyboxBuf }, { &trueno, &skybox }); }
-
+	while (!window.closed())
+	{
+		events.update({ &vao, &skyboxBuf }, { &trueno, &skybox});
+	}
 	return 0;
 }

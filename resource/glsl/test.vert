@@ -5,8 +5,9 @@ layout (location = 1) in vec3 normal;
 layout (location = 2) in vec2 texCoord;
 
 uniform mat4 Model;
-uniform mat4 View;
-uniform mat4 Projection;
+
+ uniform   mat4 Projection;
+  uniform  mat4 View;
 
 uniform vec3 lightPos;
 

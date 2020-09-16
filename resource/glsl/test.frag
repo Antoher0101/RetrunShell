@@ -26,8 +26,10 @@ struct Material {
 uniform vec3 viewPos;
 uniform Material material;
 uniform Light light;
-uniform sampler2D ourTexture;
+uniform sampler2D Texture;
 uniform float iTime;
+
+in float test;
 
 void main()
 {
@@ -47,5 +49,5 @@ void main()
     vec3 specular = light.specular * (spec * material.specular);  
        
     vec3 result = ambient + diffuse + specular;
-   FragColor = texture(ourTexture,TexCoord)*vec4(result, 1.0);
+    FragColor = vec4(result, 1.0)*texture(Texture,TexCoord);
 }

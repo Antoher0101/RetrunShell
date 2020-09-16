@@ -32,9 +32,7 @@ class ViewCam
 	glm::vec3 cameraFront;
 	glm::vec3 cameraPos;
 	const glm::vec3 cameraUp = { 0.0f, 1.0f, 0.0f };
-	// Pitch - along the Y axis
-	// Yaw   - along the X axis
-	// Roll  - along the Z axis
+
 	Euler euler_;
 	
 public:
@@ -48,6 +46,10 @@ public:
 	glm::vec3 getCameraPos();
 	glm::vec3 getCameraUp();
 
+	void setMotionSpeed(float x) { motionSpeed = x; }
+	
+	void resetMouseDelta();
+	
 	void setElapsedTime(float t);
 	~ViewCam();
 };

@@ -21,7 +21,7 @@ class Events
 	GLfloat deltaTime = 0.0f;
 	GLfloat lastFrame = 0.0f;
 
-	float x = 1.f;
+	float x = 0.1f;
 	
 	// Variables for handling mouse button events
 	bool draggingL = false;

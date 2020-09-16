@@ -13,6 +13,17 @@
 #include <glm/glm.hpp>
 
 #include "Mesh.h"
+
+typedef struct
+{
+    unsigned char* data;
+    int width;
+    int height;
+    int components;
+}texture_data;
+
+
+
 class ModelReader
 {
     std::vector<Mesh> meshes;
@@ -28,11 +39,14 @@ class ModelReader
     void loadModel(std::string name);
     void processNode(aiNode* node, const aiScene* scene);
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-    std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 public:
     ModelReader(const char* path) { loadModel(path); gammaCorrection = 0; }
-    void setTexture(std::string name);
+	
     std::vector<Mesh> getMeshes() const;
+
+    static texture_data loadTexture(std::string file_name);
+    static void freeTexture(texture_data texture);
+	
     ~ModelReader();
 };
 

@@ -1,8 +1,6 @@
 #include "VertexBuffer.h"
 
-#include <stb/stb_image.h>
-
-void VertexBuffer::drawObj(GLenum type, GLenum textureType)
+void VertexBuffer::drawObj(GLenum type, GLsizei primcount, GLenum textureType)
 {
 	assert(indexBuffer != 0);
 	
@@ -10,7 +8,7 @@ void VertexBuffer::drawObj(GLenum type, GLenum textureType)
 	for (GLuint i = 0; i < Buffers.size(); i++)
 		glEnableVertexAttribArray(i);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-	glDrawElements(type, indexCount, GL_UNSIGNED_INT, nullptr);
+	glDrawElementsInstanced(type, indexCount, GL_UNSIGNED_INT, nullptr, primcount);
 	for (GLuint i = 0; i < Textures.size(); i++)
 	{
 		glActiveTexture(GL_TEXTURE0);
@@ -20,25 +18,31 @@ void VertexBuffer::drawObj(GLenum type, GLenum textureType)
 		glDisableVertexAttribArray(i);
 }
 
+void VertexBuffer::drawText(GLuint Vao, GLuint texture)
+{
+	
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray(Vao_);
+}
+
 void VertexBuffer::addTextureBuffer(std::string filename)
 {
-	std::string tex_path = "resource/model/textures/" + filename;
+	texture_data texturedata = ModelReader::loadTexture(filename);
+	
 	GLuint texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	int width, height, nrComponents;
 	
-	unsigned char* data = stbi_load(tex_path.c_str(), &width, &height, &nrComponents, 0);
-	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	if (texturedata.data) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texturedata.width, texturedata.height, 0, GL_RGB, GL_UNSIGNED_BYTE, texturedata.data);
 		glGenerateMipmap(GL_TEXTURE_2D);
-		stbi_image_free(data);
+		ModelReader::freeTexture(texturedata);
 	}
 	else
 	{
 		std::cout << "Texture load error!" << std::endl;
 	}
-	
 	// Set the texture wrapping parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -53,7 +57,7 @@ void VertexBuffer::addTextureBuffer(std::string filename)
 
 void VertexBuffer::addCubeMapBuffer(std::vector<std::string> faces_name)
 {
-	const std::string face_path = "resource/model/textures/skybox/";
+	const std::string face_path = "skybox/";
 	for (size_t i = 0; i < faces_name.size(); i++)
 		faces_name[i].insert(0, face_path);
 	
@@ -61,19 +65,18 @@ void VertexBuffer::addCubeMapBuffer(std::vector<std::string> faces_name)
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 
-	int width, height, nrChannels;
 	for (unsigned int i = 0; i < faces_name.size(); i++)
 	{
-		unsigned char* data = stbi_load(faces_name[i].c_str(), &width, &height, &nrChannels, 0);
-		if (data)
+		texture_data texturedata = ModelReader::loadTexture(faces_name[i]);
+		if (texturedata.data)
 		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			stbi_image_free(data);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, texturedata.width, texturedata.height, 0, GL_RGB, GL_UNSIGNED_BYTE, texturedata.data);
+			ModelReader::freeTexture(texturedata);
 		}
 		else
 		{
 			std::cout << "Cubemap texture failed to load at path: " << faces_name[i] << std::endl;
-			stbi_image_free(data);
+			ModelReader::freeTexture(texturedata);
 		}
 	}
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);//GL_LINEAR
@@ -87,6 +90,38 @@ void VertexBuffer::addCubeMapBuffer(std::vector<std::string> faces_name)
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
+GLuint VertexBuffer::addGlyphTexture(FT_Face face)
+{
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width, face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, 
+	face->glyph->bitmap.buffer );
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	Glyphs.emplace_back(texture);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	return texture;
+}
+
+void VertexBuffer::addTextBuffer(const GLfloat& data)
+{
+	GLuint Vbo;
+	glGenVertexArrays(1, &Vao_);
+	glGenBuffers(1, &Vbo);
+	glBindVertexArray(Vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, Vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+	Buffers.emplace_back(Vbo);
+}
 
 void VertexBuffer::addVertexBuffer(const std::vector<GLfloat>& data)
 {
