@@ -3,6 +3,10 @@
 // Not WindowGL::methods // Recall that the WindowUserPointer is our current context and our current window
 void window_resize(GLFWwindow* window, int width, int height)
 {
+	
+}
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
 	glViewport(0, 0, width, height);
 }
 
@@ -86,6 +90,7 @@ bool WindowGL::init()
 	glfwSetMouseButtonCallback(m_Window, mouse_button_callback);	// Set Mouse Callback
 	glfwSetCursorPosCallback(m_Window, cursor_position_callback);	// Set Cursor Pos Callback
 	glfwSetScrollCallback(m_Window, scroll_callback);				// Set scroll Callback
+	glfwSetFramebufferSizeCallback(m_Window, framebuffer_size_callback); 
 
 	// GLEW initialization
 	try
@@ -115,6 +120,11 @@ bool WindowGL::isMouseButtonPressed(unsigned int button) const
 	if (button >= MAX_BUTTONS)
 		return false;
 	return m_MouseButtons[button];
+}
+
+bool WindowGL::isWindowResized()
+{
+	return false;
 }
 
 bool WindowGL::isWheelScrolled(unsigned int dir)

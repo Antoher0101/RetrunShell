@@ -17,13 +17,10 @@ void VertexBuffer::drawObj(GLenum type, GLsizei primcount, GLenum textureType)
 	for (GLuint i = 0; i < Buffers.size(); i++)
 		glDisableVertexAttribArray(i);
 }
-
-void VertexBuffer::drawText(GLuint Vao, GLuint texture)
+void VertexBuffer::staticDraw()
 {
-	
-
+	bindArrayObject();
 	glActiveTexture(GL_TEXTURE0);
-	glBindVertexArray(Vao_);
 }
 
 void VertexBuffer::addTextureBuffer(std::string filename)
@@ -92,9 +89,9 @@ void VertexBuffer::addCubeMapBuffer(std::vector<std::string> faces_name)
 
 GLuint VertexBuffer::addGlyphTexture(FT_Face face)
 {
-	GLuint texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	GLuint glyph;
+	glGenTextures(1, &glyph);
+	glBindTexture(GL_TEXTURE_2D, glyph);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width, face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, 
 	face->glyph->bitmap.buffer );
 
@@ -102,25 +99,32 @@ GLuint VertexBuffer::addGlyphTexture(FT_Face face)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	Glyphs.emplace_back(texture);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	return texture;
+	return glyph;
 }
 
-void VertexBuffer::addTextBuffer(const GLfloat& data)
+void VertexBuffer::updateBuffer(gltext::Glyph ch, std::vector<glm::vec4>& vertices)
+{
+	glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+	glBindBuffer(GL_ARRAY_BUFFER, Buffers[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size()*sizeof(glm::vec4), vertices.data());
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+}
+
+void VertexBuffer::addTextBuffer()
 {
 	GLuint Vbo;
-	glGenVertexArrays(1, &Vao_);
 	glGenBuffers(1, &Vbo);
-	glBindVertexArray(Vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, Vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+	Buffers.emplace_back(Vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-	Buffers.emplace_back(Vbo);
 }
 
 void VertexBuffer::addVertexBuffer(const std::vector<GLfloat>& data)
@@ -173,6 +177,12 @@ void VertexBuffer::addIndices(const std::vector<GLuint>& data)
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.size() * sizeof(GLuint), data.data(), GL_STATIC_DRAW);
+}
+
+void VertexBuffer::unbindBuffer()
+{
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void VertexBuffer::bindArrayObject()

@@ -1,6 +1,4 @@
-#ifndef WINDOWGL_H
-
-#define WINDOWGL_H
+#pragma once
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -15,7 +13,6 @@
 
 class WindowGL
 {
-
 private:
 	const char* m_Title;
 	int m_Width, m_Height;
@@ -28,6 +25,7 @@ private:
 	
 	double m_WheelOffsetY;
 	double m_WheelOffsetX; // Unused
+
 	
 	GLFWwindow* getWindow() const { return m_Window; }
 	
@@ -35,6 +33,7 @@ private:
 	friend static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 	friend static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 	friend static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+
 
 	bool init();
 	
@@ -50,10 +49,11 @@ public:
 	bool isKeyPressed(unsigned int keycode) const;
 	bool isMouseButtonPressed(unsigned int button) const;
 
+	bool isWindowResized();
+	
 	bool isWheelScrolled(unsigned int dir);
 	
 	glm::vec2 getMousePosition();
 
 	friend class Events;
 };
-#endif

@@ -32,7 +32,7 @@ class Events
 public:
 	Events(WindowGL* win);
 	Events(Events&) = delete;
-	void update(std::vector<VertexBuffer*> vao = { nullptr }, std::vector<Shader*> shader = { nullptr });
+	void update(std::vector<VertexBuffer*> vao = { nullptr }, std::vector<Shader*> shader = { nullptr }, gltext::Text* text = nullptr);
 };
 
 #endif
