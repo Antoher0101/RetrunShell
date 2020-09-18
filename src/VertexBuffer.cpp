@@ -5,15 +5,16 @@ void VertexBuffer::drawObj(GLenum type, GLsizei primcount, GLenum textureType)
 	assert(indexBuffer != 0);
 	
 	bindArrayObject();
-	for (GLuint i = 0; i < Buffers.size(); i++)
-		glEnableVertexAttribArray(i);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-	glDrawElementsInstanced(type, indexCount, GL_UNSIGNED_INT, nullptr, primcount);
 	for (GLuint i = 0; i < Textures.size(); i++)
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(textureType, Textures[i]);
 	}
+	for (GLuint i = 0; i < Buffers.size(); i++)
+		glEnableVertexAttribArray(i);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	glDrawElementsInstanced(type, indexCount, GL_UNSIGNED_INT, nullptr, primcount);
+	
 	for (GLuint i = 0; i < Buffers.size(); i++)
 		glDisableVertexAttribArray(i);
 }

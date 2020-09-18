@@ -46,10 +46,11 @@ WindowGL::WindowGL(const char* title, int width, int height)
 	for (int i = 0; i < MAX_BUTTONS; i++)
 		m_MouseButtons[i] = false;
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 WindowGL::~WindowGL()
 {

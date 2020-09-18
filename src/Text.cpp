@@ -56,7 +56,7 @@ void gltext::Text::RenderText(string text, Shader* shader)
     projection.setOrtho(screenW_, screenH_);
     shader->setShader();
     shader->setUniform("projection", projection.getMatrix());
-    shader->setUniform("textColor", { 0.f, 0.f, 0.f });
+    shader->setUniform("textColor", { color_.r, color_.g, color_.b });
     int by = 0, max_y = 0;
     float x = position_.x;
     float y = position_.y;

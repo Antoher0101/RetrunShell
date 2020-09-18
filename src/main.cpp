@@ -22,21 +22,47 @@ const int HEIGHT = 720;
 int main(int argc, char* argv[])
 {	
 	WindowGL window("GLFW", WIDTH, HEIGHT);
-
-	VertexBuffer textBuffer;
-	gltext::Text txt(textBuffer);
-	txt.init("consola.ttf", 32);
-	txt.genGlyphList();
-	textBuffer.addTextBuffer();
 	
+	ModelReader skycube("cube.obj");
+	VertexBuffer skyboxBuf;
+	skyboxBuf.addVertexBuffer(skycube.getMeshes()[0].getVertexPos());
+	skyboxBuf.addCubeMapBuffer({ "negx.jpg",
+	"posx.jpg",
+	"posy.jpg",
+	"negy.jpg",
+	"negz.jpg",
+	"posz.jpg" });
+	skyboxBuf.addIndices(skycube.getMeshes()[0].getIndeces());
+	Shader skybox("skybox");
+	skybox.bindAttrib(0, "pos");
+	skybox.bindAttrib(1, "texCoord");
+	skybox.link();
+	
+	VertexBuffer modelbuf;
+	ModelReader model("TruenoT.obj");
+	modelbuf.addVertexBuffer(model.getMeshes()[0].getVertexPos());
+	modelbuf.addVertexBuffer(model.getMeshes()[0].getVertexNormals());
+	modelbuf.addVertexBuffer(model.getMeshes()[0].getTexCoords());
+	modelbuf.addIndices(model.getMeshes()[0].getIndeces());
+	modelbuf.addTextureBuffer("tex.jpg");
+	Shader trueno("test");
+	trueno.bindAttrib(0, "pos");
+	trueno.bindAttrib(1, "normal");
+	trueno.bindAttrib(2, "texCoord");
+	trueno.link();
+	
+	VertexBuffer textBuffer;
+	textBuffer.addTextBuffer();
+	gltext::Text txt(textBuffer);
+	txt.init("consola.ttf", 52);
+	txt.genGlyphList();
 	Shader textShader("text");
-	textShader.bindAttrib(0, "vertex");
 	textShader.link();
 	
 	Events events(&window);
 	while (!window.closed())
 	{
-		events.update({ &textBuffer }, { &textShader }, &txt);
+		events.update({ &textBuffer, &skyboxBuf, &modelbuf }, { &textShader, &skybox, &trueno }, &txt);
 	}
 	return 0;
 }

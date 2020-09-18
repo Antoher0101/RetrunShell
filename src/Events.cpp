@@ -26,8 +26,8 @@ void Events::update(std::vector<VertexBuffer*> vao, std::vector<Shader*> shader,
 	glfwPollEvents();
 
 	// Clear OpenGL buffers
-	glClearColor(1.f, 1.f, 1.f, 1.f);
-	glClearDepth(1.0f);
+	glClearColor(0.f, 0.f, 0.f, 1.f);
+	glClearDepth(1.0);
 	
 	window->clear();
 	
@@ -60,16 +60,59 @@ void Events::update(std::vector<VertexBuffer*> vao, std::vector<Shader*> shader,
 	
 	cam.setMotionSpeed(x);
 	 // std::cout << "" << std::endl;
+	
+	
 
+	mx::Model model;
+	model.mTranslate({ 0.f,0.f,-2.f });
+	model.mRotate(15.f, { 1.f, 1.f, 0.f });
+	model.mRotate(0.f * clock, { 0.f, 1.f, 0.f });
+	model.mScale({ 0.045f,0.045f,0.045f });
+	mx::View view;
+	view.lookAt(cam.getCameraPos(), cam.getCameraPos() + cam.getCameraFront(), cam.getCameraUp());
+
+	mx::Projection projection;
+	projection.setPerspective(45.f, (float)screenW, (float)screenH, 0.01f, 100.f);
+	shader[2]->setShader();
+
+	shader[2]->setUniform("light.position", { 0.f,0.f,0.f });
+	shader[2]->setUniform("viewPos", cam.getCameraUp() /*view.getPosition()*/);
+
+	shader[2]->setMaterial(Material::silver());
+
+	glm::vec3 diffuseColor = glm::vec3{ 0.569f,0.118f,0.259f } *glm::vec3(0.5f);
+	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.11f);
+	shader[2]->setUniform("light.ambient", ambientColor);
+	shader[2]->setUniform("light.diffuse", diffuseColor);
+	shader[2]->setUniform("light.specular", { 1.0f, 1.0f, 1.0f });
+
+	// Send the uniforms to shader
+	shader[2]->setUniform("Model", model.getMatrix());
+	shader[2]->setUniform("View", view.getMatrix());
+	shader[2]->setUniform("Projection", projection.getMatrix());
+	shader[2]->setUniform("iResolution", (float)screenW, (float)screenH);
+	shader[2]->setUniform("iTime", clock);
+	vao[2]->drawObj();
+
+	// Skybox
+	glDepthFunc(GL_LEQUAL);
+	glDepthMask(GL_FALSE);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+	shader[1]->setShader();
+	glm::mat4 viewS = glm::mat4(glm::mat3(view.getMatrix()));
+	shader[1]->setUniform("View", viewS);
+	shader[1]->setUniform("viewPos", view.getPosition());
+	shader[1]->setUniform("Projection", projection.getMatrix());
+	shader[1]->setUniform("iResolution", (float)screenW, (float)screenH);
+	shader[1]->setUniform("iTime", clock);
+	vao[1]->drawObj(GL_TRIANGLES, 1, GL_TEXTURE_CUBE_MAP);
+	glDepthMask(GL_TRUE);
+	glDisable(GL_CULL_FACE);
+	
+	text->setColor(0.f, 1.f, 1.f);
 	text->setPos(AT_CENTER);
 	text->RenderText("T h e  Q u i c k  B r o w n  F o x", shader[0]);
-	text->setPos(AT_LEFT | AT_TOP);
-	text->RenderText("SHIFT BUG", shader[0]);
-	
-	
-	
-	//text->setPos(AT_CENTER);
-	//text->RenderText("N I N J A   N A R U T O", shader[0]);
 	
 	if (draggingL) { cam.calculateCam(); }
 	glfwSwapBuffers(glfw_window);

@@ -31,7 +31,14 @@ namespace gltext
 		glm::ivec2 Bearing; // Offset from baseline to left/top of glyph
 		GLuint     Advance; // Offset to advance to next glyph
 	};
-	
+	/*
+	 * After creating a class object with a buffer(and create an empty textbuffer), you need to initialize the freetype using
+	 * void init(font_name, height)
+	 *
+	 * Then, generate list of the symbols using void genGlyphList()
+	 *
+	 * After that create a shader with no attributes and link it
+	 */
 	class Text
 	{
 		FT_Library lib;
