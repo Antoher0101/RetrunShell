@@ -64,6 +64,14 @@ void gltext::Text::RenderText(string text, Shader* shader)
     for (std::string::const_iterator c = text.begin(); c != text.end(); ++c)
     {
         Glyph ch = characters[*c];
+    	
+        if (*c == '\n') 
+        { // Set position of the new line
+	        y -= (ch.Size.y + ch.Bearing.y)*1.1f*scale_; 
+        	x -= x - position_.x;
+        	continue;
+        }
+    	
         GLfloat xpos = x + ch.Bearing.x * scale_;
         GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale_;
 
@@ -95,7 +103,7 @@ void gltext::Text::setPos(GLint x, GLint y)
     position_ = { x,y };
 }
 
-void gltext::Text::setPos(int alignment) // Bug there
+void gltext::Text::setPos(int alignment) // Bug: Positioning error related to calculating 'TextWidth'
 {
 	switch (alignment)
 	{

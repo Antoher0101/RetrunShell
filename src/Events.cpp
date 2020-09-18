@@ -43,8 +43,8 @@ void Events::update(std::vector<VertexBuffer*> vao, std::vector<Shader*> shader,
 	if (window->isKeyPressed(GLFW_KEY_A)) { cam.movementCam(MOVE_LEFT); }
 	if (window->isKeyPressed(GLFW_KEY_D)) { cam.movementCam(MOVE_RIGHT); }
 	
-	if (window->isWheelScrolled(M_WHEEL_UP)) x+=0.001;
-	if (window->isWheelScrolled(M_WHEEL_DOWN)) if (x-0.001 > 0) { x -= 0.001; }
+	if (window->isWheelScrolled(M_WHEEL_UP)) x+=0.009f;
+	if (window->isWheelScrolled(M_WHEEL_DOWN)) if (x-0.05f > 0) { x -= 0.009f; }
 
 	if(window->isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
 		glfwSetInputMode(glfw_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -110,9 +110,10 @@ void Events::update(std::vector<VertexBuffer*> vao, std::vector<Shader*> shader,
 	glDepthMask(GL_TRUE);
 	glDisable(GL_CULL_FACE);
 	
-	text->setColor(0.f, 1.f, 1.f);
-	text->setPos(AT_CENTER);
-	text->RenderText("T h e  Q u i c k  B r o w n  F o x", shader[0]);
+	text->setColor(1.f, 0.f, 0.5f);
+	text->setPos(150,screenH-150);
+	text->setScale(0.5f);
+	text->RenderText("With the lights out, it's less dangerous\nHere we are now, entertain us\nI feel stupid and contagious\nHere we are now, entertain us\nA mulatto, an albino\nA mosquito, my libido", shader[0]);
 	
 	if (draggingL) { cam.calculateCam(); }
 	glfwSwapBuffers(glfw_window);
