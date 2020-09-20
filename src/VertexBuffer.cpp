@@ -88,20 +88,19 @@ void VertexBuffer::addCubeMapBuffer(std::vector<std::string> faces_name)
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
-GLuint VertexBuffer::addGlyphTexture(FT_Face face)
+GLuint VertexBuffer::addGlyphTexture(FT_BitmapGlyph bitmap)
 {
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	
 	GLuint glyph;
 	glGenTextures(1, &glyph);
 	glBindTexture(GL_TEXTURE_2D, glyph);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width, face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, 
-	face->glyph->bitmap.buffer );
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, bitmap->bitmap.width, bitmap->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap->bitmap.buffer);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
 	return glyph;
 }
 
@@ -112,7 +111,6 @@ void VertexBuffer::updateBuffer(gltext::Glyph ch, std::vector<glm::vec4>& vertic
 	glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size()*sizeof(glm::vec4), vertices.data());
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-
 }
 
 void VertexBuffer::addTextBuffer()

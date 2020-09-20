@@ -31,7 +31,7 @@ public:
 	void addTextureBuffer(std::string filename);
 	void addCubeMapBuffer(std::vector<std::string>faces_name);
 	
-	GLuint addGlyphTexture(FT_Face face);
+	GLuint addGlyphTexture(FT_BitmapGlyph bitmap);
 	void updateBuffer(gltext::Glyph ch, std::vector<glm::vec4>& vertices);
 	
 	void addTextBuffer();

@@ -82,6 +82,10 @@ void Shader::setUniform(const std::string& name, glm::vec4 value)
 {
 	glUniform4fv(getLocation(name), 1, glm::value_ptr(value));
 }
+void Shader::setUniform(const std::string& name, int value)
+{
+	glUniform1i(getLocation(name), value); 
+}
 
 GLint Shader::getLocation(const std::string& name)
 {

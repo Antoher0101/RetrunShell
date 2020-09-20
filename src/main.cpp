@@ -54,8 +54,7 @@ int main(int argc, char* argv[])
 	VertexBuffer textBuffer;
 	textBuffer.addTextBuffer();
 	gltext::Text txt(textBuffer);
-	txt.init("lucon.ttf", 52);
-	txt.genGlyphList();
+	txt.init("discoduckhalfital.ttf", 64);
 	Shader textShader("text");
 	textShader.link();
 	

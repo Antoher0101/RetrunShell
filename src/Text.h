@@ -10,6 +10,7 @@
 #include "ft2build.h"
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
+#include FT_STROKER_H
 
 // Alignment types
 #define AT_LEFT 0x00B
@@ -43,38 +44,56 @@ namespace gltext
 	{
 		FT_Library lib;
 		FT_Face face;
+		FT_Stroker stroker;
+		FT_Glyph glyph;
 		
 		GLuint texture;
 		VertexBuffer* vao;
 		
 		GLfloat scale_;
 		glm::vec3 color_;
+		glm::vec3 outline_color_;
 		glm::ivec2 position_;
 
 		GLint MaxBearingY; // Max glyph offset along the y-axis
 		GLint TextWidth; 
 		GLint TextHeight;
-
+		GLint outlineThickness;
+		
+		string text_;
+		Shader* shader_;
+		
 		mx::Projection projection;
+		
+		FT_Bool outlineEnabled = false;
 
 		static FT_UInt screenW_;
 		static FT_UInt screenH_;
 		std::map<GLchar, Glyph> characters;
-
+		std::map<GLchar, Glyph> outlines;
+		
+		void genGlyphList();
+		void genOutline();
+		void displayText();
+		void displayOutline();
+		
 		void clean();
 	public:
 		Text(VertexBuffer& buffer);
 		void init(const string& font_name, unsigned int height);
-		void genGlyphList();
-		void RenderText(string text, Shader* shader);
-
+		
+		
+		void RenderText(Shader* shader, const string& text, const string& param = "");
+		
 		void setPos(GLint x, GLint y);
-		void setPos(int alignment); // AT_CENTER | AT_LEFT etc.
+		void setPos(int alignment);
 		
 		void setScale(GLfloat scale);
 		void setColor(GLfloat r, GLfloat g, GLfloat b);
-		
-		void setOutline();
+
+		void setOutline(bool setoutline = 1) { outlineEnabled = setoutline; }
+		void setOutlineThickness(GLint thickness) { outlineThickness = thickness; }
+		void setOutlineColor(GLfloat r, GLfloat g, GLfloat b) { outline_color_ = { r,g,b }; }
 		
 		static void updateScreenSize(FT_UInt w, FT_UInt h) { screenW_ = w; screenH_ = h; }
 	};

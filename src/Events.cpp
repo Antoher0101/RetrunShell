@@ -111,9 +111,10 @@ void Events::update(std::vector<VertexBuffer*> vao, std::vector<Shader*> shader,
 	glDisable(GL_CULL_FACE);
 	
 	text->setColor(1.f, 0.f, 0.5f);
+	text->setOutline();
+	text->setOutlineColor(0.f, 0.f, 1.f);
 	text->setPos(150,screenH-150);
-	text->setScale(0.5f);
-	text->RenderText("With the lights out, it's less dangerous\nHere we are now, entertain us\nI feel stupid and contagious\nHere we are now, entertain us\nA mulatto, an albino\nA mosquito, my libido", shader[0]);
+	text->RenderText(shader[0], "FUCK THIS: ", std::to_string(static_cast<unsigned>(10-clock)));
 	
 	if (draggingL) { cam.calculateCam(); }
 	glfwSwapBuffers(glfw_window);
