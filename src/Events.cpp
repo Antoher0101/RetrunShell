@@ -1,10 +1,5 @@
 #include "Events.h"
 #include "Material.h"
-Events::Events(WindowGL* win)
-{
-	window = win;
-	glfw_window = win->getWindow();
-}
 
 void Events::update(std::vector<VertexBuffer*> vao, std::vector<Shader*> shader, gltext::Text* text)
 {
@@ -14,8 +9,8 @@ void Events::update(std::vector<VertexBuffer*> vao, std::vector<Shader*> shader,
 		std::cout << "OpenGL Error: " << error << std::endl;
 	
 	// Get screen size
-	glfwGetWindowSize(glfw_window, &screenW, &screenH);	
-	glfwSwapInterval(1);
+	glfwGetWindowSize(glfw_window_, &screenW, &screenH);	
+	glfwSwapInterval(0);
 
 	gltext::Text::updateScreenSize(screenW, screenH);
 	
@@ -25,40 +20,22 @@ void Events::update(std::vector<VertexBuffer*> vao, std::vector<Shader*> shader,
 	// Start events handle 
 	glfwPollEvents();
 
+	
 	// Clear OpenGL buffers
 	glClearColor(0.f, 0.f, 0.f, 1.f);
 	glClearDepth(1.0);
 	
-	window->clear();
+	window_->clear();
 	
 	// it works somehow
-	cam.resetMouseDelta();
+	cam_.resetMouseDelta();
 	
-	cam.setElapsedTime(deltaTime*100);
-	cam.setFirstMousePos(window->getMousePosition());
+	cam_.setElapsedTime(deltaTime*100);
+	cam_.setFirstMousePos(window_->getMousePosition());
+	
+	InputHandler input_handler(window_,&cam_);
+	input_handler.handleInput();
 
-	if (window->isKeyPressed(GLFW_KEY_ESCAPE)) { glfwSetWindowShouldClose(window->getWindow(), true); }
-	if (window->isKeyPressed(GLFW_KEY_W)) { cam.movementCam(MOVE_FORWARD); }
-	if (window->isKeyPressed(GLFW_KEY_S)) { cam.movementCam(MOVE_BACK); }
-	if (window->isKeyPressed(GLFW_KEY_A)) { cam.movementCam(MOVE_LEFT); }
-	if (window->isKeyPressed(GLFW_KEY_D)) { cam.movementCam(MOVE_RIGHT); }
-	
-	if (window->isWheelScrolled(M_WHEEL_UP)) x+=0.009f;
-	if (window->isWheelScrolled(M_WHEEL_DOWN)) if (x-0.05f > 0) { x -= 0.009f; }
-
-	if(window->isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-		glfwSetInputMode(glfw_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		draggingL = true;
-		if (!wasReleased) {
-			 cam.setMouseLastPos(window->getMousePosition());
-		}
-	} else {
-		glfwSetInputMode(glfw_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		draggingL = false;
-		wasReleased = true;
-	}
-	
-	cam.setMotionSpeed(x);
 	 // std::cout << "" << std::endl;
 	
 	
@@ -69,14 +46,14 @@ void Events::update(std::vector<VertexBuffer*> vao, std::vector<Shader*> shader,
 	model.mRotate(0.f * clock, { 0.f, 1.f, 0.f });
 	model.mScale({ 0.045f,0.045f,0.045f });
 	mx::View view;
-	view.lookAt(cam.getCameraPos(), cam.getCameraPos() + cam.getCameraFront(), cam.getCameraUp());
+	view.lookAt(cam_.getCameraPos(), cam_.getCameraPos() + cam_.getCameraFront(), cam_.getCameraUp());
 
 	mx::Projection projection;
 	projection.setPerspective(45.f, (float)screenW, (float)screenH, 0.01f, 100.f);
 	shader[2]->setShader();
 
 	shader[2]->setUniform("light.position", { 0.f,0.f,0.f });
-	shader[2]->setUniform("viewPos", cam.getCameraUp() /*view.getPosition()*/);
+	shader[2]->setUniform("viewPos", cam_.getCameraUp() /*view.getPosition()*/);
 
 	shader[2]->setMaterial(Material::silver());
 
@@ -111,11 +88,11 @@ void Events::update(std::vector<VertexBuffer*> vao, std::vector<Shader*> shader,
 	glDisable(GL_CULL_FACE);
 	
 	text->setColor(1.f, 0.f, 0.5f);
-	text->setOutline();
+	//text->setOutline();
 	text->setOutlineColor(0.f, 0.f, 1.f);
-	text->setPos(150,screenH-150);
-	text->RenderText(shader[0], "FUCK THIS: ", std::to_string(static_cast<unsigned>(10-clock)));
+	text->setPos(150,150);
+	text->RenderText(shader[0], "FUCK THIS:    ", std::to_string(static_cast<unsigned short>(10-clock)));
 	
-	if (draggingL) { cam.calculateCam(); }
-	glfwSwapBuffers(glfw_window);
+	if (window_->getMouseLButtonState()) { cam_.calculateCam(); }
+	glfwSwapBuffers(glfw_window_);
 }

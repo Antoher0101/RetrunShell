@@ -1,19 +1,17 @@
-#ifndef EVENTS_H
-#define EVENTS_H
+#pragma once
 
 #include "VertexBuffer.h"
 #include "Shader.h"
 #include "mx/mx.h"
 #include "ViewCam.h"
 #include "WindowGL.h"
+#include "input/InputHandler.h"
 
 class Events
 {
-	WindowGL* window;
-
-	GLFWwindow* glfw_window;
-
-	ViewCam cam;
+	WindowGL* window_;
+	GLFWwindow* glfw_window_;
+	ViewCam cam_;
 	
 	int screenW;
 	int screenH;
@@ -21,18 +19,9 @@ class Events
 	GLfloat deltaTime = 0.0f;
 	GLfloat lastFrame = 0.0f;
 
-	float x = 0.1f;
-	
-	// Variables for handling mouse button events
-	bool draggingL = false;
-	bool draggingM = false;
-	bool draggingR = true;
-
-	bool wasReleased = true;
 public:
-	Events(WindowGL* win);
+	Events(WindowGL* win) : window_(win), glfw_window_(win->getWindow()) {}
 	Events(Events&) = delete;
 	void update(std::vector<VertexBuffer*> vao = { nullptr }, std::vector<Shader*> shader = { nullptr }, gltext::Text* text = nullptr);
 };
 
-#endif
