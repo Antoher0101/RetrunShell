@@ -17,7 +17,6 @@ const int HEIGHT = 720;
 // TODO: https://habr.com/ru/post/347354/
 // TODO: UniformBuffer (View, Projection)
 // TODO: Display text and current speed
-// TODO: Move key handle to WindowGL
 
 int main(int argc, char* argv[])
 {	
@@ -54,7 +53,7 @@ int main(int argc, char* argv[])
 	VertexBuffer textBuffer;
 	textBuffer.addTextBuffer();
 	gltext::Text txt(textBuffer);
-	txt.init("discoduckhalfital.ttf", 64);
+	txt.init("arial.ttf", 64);
 	Shader textShader("text");
 	textShader.link();
 	

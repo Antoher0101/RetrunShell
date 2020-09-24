@@ -9,7 +9,3 @@ glm::mat4 mx::Matrix::getMatrix()
 {
 	return matrix_;
 }
-
-mx::Matrix::~Matrix()
-{
-}

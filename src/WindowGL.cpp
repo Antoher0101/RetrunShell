@@ -74,7 +74,7 @@ bool WindowGL::init()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	m_Window = glfwCreateWindow(m_Width, m_Height, m_Title, NULL, NULL);		// Returns a pointer
+	m_Window = glfwCreateWindow(m_Width, m_Height, m_Title, nullptr, nullptr);		// Returns a pointer
 
 	if (!m_Window)
 	{
@@ -123,11 +123,6 @@ bool WindowGL::isMouseButtonPressed(unsigned int button) const
 	return m_MouseButtons[button];
 }
 
-bool WindowGL::isWindowResized()
-{
-	return false;
-}
-
 bool WindowGL::isWheelScrolled(unsigned int dir)
 {
 	if (dir == M_WHEEL_UP && m_WheelOffsetY > 0)
@@ -148,6 +143,40 @@ glm::vec2 WindowGL::getMousePosition()
 {
 	glfwGetCursorPos(m_Window, &mX, &mY);
 	return { mX,mY };
+}
+
+void WindowGL::setMouseLButtonState(bool state)
+{
+	leftMouseButtonState = state;
+}
+
+void WindowGL::setMouseRButtonState(bool state)
+{
+	rightMouseButtonState = state;
+}
+
+bool WindowGL::getMouseLButtonState()
+{
+	return leftMouseButtonState;
+}
+
+bool WindowGL::getMouseRButtonState()
+{
+	return rightMouseButtonState;
+}
+
+void WindowGL::changeFullscreen()
+{
+	if (fullscreen == true)
+	{
+		glfwSetWindowMonitor(m_Window, NULL, m_Width / 4, m_Height / 4, 1280, 720, GLFW_DONT_CARE);
+		fullscreen = false;
+	}
+	else
+	{
+		glfwSetWindowMonitor(m_Window, glfwGetPrimaryMonitor(), 0, 0, 1980, 1080, GLFW_DONT_CARE);
+		fullscreen = true;
+	}
 }
 
 void WindowGL::clear() const

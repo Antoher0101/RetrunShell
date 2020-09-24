@@ -91,7 +91,7 @@ namespace gltext
 		void setScale(GLfloat scale);
 		void setColor(GLfloat r, GLfloat g, GLfloat b);
 
-		void setOutline(bool setoutline = 1) { outlineEnabled = setoutline; }
+		void setOutline(bool setoutline = 1);
 		void setOutlineThickness(GLint thickness) { outlineThickness = thickness; }
 		void setOutlineColor(GLfloat r, GLfloat g, GLfloat b) { outline_color_ = { r,g,b }; }
 		

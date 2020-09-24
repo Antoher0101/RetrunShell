@@ -33,14 +33,12 @@ class ModelReader
     std::vector<unsigned int> indices;
     std::vector<Texture>      textures;
     std::vector<Texture> textures_loaded;
-
-    bool gammaCorrection;
 	
     void loadModel(std::string name);
     void processNode(aiNode* node, const aiScene* scene);
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 public:
-    ModelReader(const char* path) { loadModel(path); gammaCorrection = 0; }
+    ModelReader(const char* path) { loadModel(path); }
 	
     std::vector<Mesh> getMeshes() const;
 

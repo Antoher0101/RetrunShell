@@ -10,7 +10,7 @@ struct material
 	float shininess;
 };
 
-static class Material
+class Material
 {
 public:
 	static material emerald();

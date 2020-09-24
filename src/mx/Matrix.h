@@ -15,7 +15,7 @@ namespace mx
 		virtual void mTranslate(glm::vec3 cords) = 0;
 		virtual void mScale(glm::vec3 cords) = 0;
 		Matrix();
-		virtual ~Matrix();
+		virtual ~Matrix() {}
 	};
 }
 

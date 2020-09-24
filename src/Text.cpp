@@ -123,6 +123,11 @@ void gltext::Text::setColor(GLfloat r, GLfloat g, GLfloat b)
     color_ = { r,g,b };
 }
 
+inline void gltext::Text::setOutline(bool setoutline)
+{
+	outlineEnabled = setoutline;
+}
+
 void gltext::Text::RenderText(Shader* shader, const string& text, const string& param)
 {
     projection.setOrtho(screenW_, screenH_);
@@ -146,21 +151,20 @@ void gltext::Text::displayText()
     vao->staticDraw();
     for (std::string::const_iterator c = text_.begin(); c != text_.end(); ++c)
     {
-        int cnt = 0; cnt++;
         Glyph ch = characters[*c];
-        
-        if (*c == '\n')
-        { // Set position of the new line
-            y -= (ch.Size.y + ch.Bearing.y) * 1.1f * scale_;
-            x -= x - position_.x;
-            continue;
-        }
 
         GLfloat xpos = x + ch.Bearing.x * scale_;
         GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale_;
 
         GLfloat w = ch.Size.x * scale_;
         GLfloat h = ch.Size.y * scale_;
+
+        if (*c == '\n')
+        { // Set position of the new line
+            y -= (ch.Size.y + ch.Bearing.y) * 1.1f * scale_;
+            x -= x - position_.x;
+            continue;
+        }
         // Update VBO for each character
         std::vector<glm::vec4> vertices = {
             { xpos, ypos + h, 0.0, 0.0 },

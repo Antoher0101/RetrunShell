@@ -21,12 +21,16 @@ struct Texture {
 };
 
 class Mesh {
-	std::vector<Vertex>       vertices;
-	std::vector<unsigned int> indices;
-	std::vector<Texture>      textures;
+	std::vector<Vertex>       vertices_;
+	std::vector<unsigned int> indices_;
+	std::vector<Texture>      textures_;
 	
 public:
-    Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<Texture>& textures);
+    Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<Texture>& textures) :
+	vertices_(vertices),
+	indices_(indices),
+	textures_(textures)
+	{}
 	
 	std::vector<Vertex> getVertexData() const;
     std::vector<glm::vec3> getVertexPos() const;

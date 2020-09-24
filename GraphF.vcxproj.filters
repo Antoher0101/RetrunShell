@@ -67,6 +67,9 @@
     <ClCompile Include="src\Text.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="src\input\InputHandler.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Events.h">
@@ -109,6 +112,12 @@
       <Filter>Заголовки</Filter>
     </ClInclude>
     <ClInclude Include="src\Text.h">
+      <Filter>Заголовки</Filter>
+    </ClInclude>
+    <ClInclude Include="src\input\ICommand.h">
+      <Filter>Заголовки</Filter>
+    </ClInclude>
+    <ClInclude Include="src\input\InputHandler.h">
       <Filter>Заголовки</Filter>
     </ClInclude>
   </ItemGroup>

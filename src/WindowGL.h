@@ -19,6 +19,11 @@ private:
 	GLFWwindow* m_Window;
 	bool m_Closed;
 
+	bool fullscreen;
+	
+	bool leftMouseButtonState;
+	bool rightMouseButtonState;
+	
 	bool m_Keys[MAX_KEYS];
 	bool m_MouseButtons[MAX_BUTTONS];
 	double mX, mY;
@@ -34,26 +39,30 @@ private:
 	friend static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 	friend static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-
 	bool init();
 	
 public:
 	WindowGL(const char* title, int width, int height);
 	~WindowGL();
+	GLFWwindow*& getWindow() { return m_Window; }
+
+	void changeFullscreen();
+	
 	void clear() const;
 	bool closed() const;
-
+	
 	int getWidth()  const { return m_Width; }
 	int getHeight() const { return m_Height; }
+	glm::vec2 getMousePosition();
+
+	void setMouseLButtonState(bool state);
+	void setMouseRButtonState(bool state);
+	bool getMouseLButtonState();
+	bool getMouseRButtonState();
 	
 	bool isKeyPressed(unsigned int keycode) const;
 	bool isMouseButtonPressed(unsigned int button) const;
-
-	bool isWindowResized();
-	
 	bool isWheelScrolled(unsigned int dir);
 	
-	glm::vec2 getMousePosition();
-
 	friend class Events;
 };
